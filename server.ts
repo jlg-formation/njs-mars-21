@@ -10,6 +10,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// titi
 app.use(express.static(www));
 app.use(serveIndex(www, { icons: true }));
 
