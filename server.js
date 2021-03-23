@@ -11,7 +11,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(www));
-app.use(serveIndex(www));
+app.use(serveIndex(www, { icons: true }));
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
