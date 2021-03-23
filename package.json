@@ -1,0 +1,12 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "Site de gestion de stock d'outil",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Jean-Louis GUENEGO",
+  "license": "ISC"
+}
