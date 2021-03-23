@@ -10,7 +10,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// titi
+app.get("/api/date", (req, res) => {
+  res.json({ date: new Date() });
+});
+
 app.use(express.static(www));
 app.use(serveIndex(www, { icons: true }));
 
