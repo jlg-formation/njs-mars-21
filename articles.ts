@@ -90,4 +90,15 @@ app.patch("/:myId", (req, res) => {
   res.status(204).end();
 });
 
+app.patch("/", (req, res) => {
+  const resource: Partial<Article> = req.body;
+  for (const re of resources) {
+    Object.assign(re, resource);
+  }
+  // resources.forEach((re) => {
+  //   Object.assign(re, resource);
+  // });
+  res.status(204).end();
+});
+
 export const articles = app;
