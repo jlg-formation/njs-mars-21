@@ -51,9 +51,9 @@ export class FileDbServer {
     await this.save();
   }
 
-  deleteAll() {
+  async deleteAll() {
     this.resources.length = 0;
-    this.save();
+    await this.save();
   }
 
   rewrite(id: string, resource: Article) {

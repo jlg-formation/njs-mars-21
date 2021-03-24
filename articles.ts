@@ -30,8 +30,15 @@ app.delete("/:myId", (req, res) => {
 });
 
 app.delete("/", (req, res) => {
-  db.deleteAll();
-  res.status(204).end();
+  (async () => {
+    try {
+      await db.deleteAll();
+      res.status(204).end();
+    } catch (err) {
+      console.log("err: ", err);
+      res.status(500).end();
+    }
+  })();
 });
 
 app.use(express.json());
