@@ -67,22 +67,22 @@ export class FileDbServer {
     await this.save();
   }
 
-  update(id: string, resource: Partial<Article>) {
+  async update(id: string, resource: Partial<Article>) {
     const existingResource = this.resources.find((re) => re.id === id);
     if (existingResource === undefined) {
-      throw new Error("object not existing");
+      throw new UserError("object not existing");
     }
     Object.assign(existingResource, resource);
-    this.save();
+    await this.save();
   }
 
-  updateAll(resource: Partial<Article>) {
+  async updateAll(resource: Partial<Article>) {
     for (const re of this.resources) {
       Object.assign(re, resource);
     }
     // this.resources.forEach((re) => {
     //   Object.assign(re, resource);
     // });
-    this.save();
+    await this.save();
   }
 }

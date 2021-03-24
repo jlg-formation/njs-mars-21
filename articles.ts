@@ -77,22 +77,35 @@ app.put("/:myId", (req, res) => {
 });
 
 app.patch("/:myId", (req, res) => {
-  const id = req.params.myId;
-  const resource: Partial<Article> = req.body;
-  try {
-    db.update(id, resource);
-  } catch (error) {
-    res.status(400).send((error as Error).message);
-  }
-
-  res.status(204).end();
+  (async () => {
+    try {
+      const id = req.params.myId;
+      const resource: Partial<Article> = req.body;
+      await db.update(id, resource);
+      res.status(204).end();
+    } catch (error) {
+      if (error instanceof UserError) {
+        res.status(400).send((error as Error).message);
+        return;
+      }
+      console.log("error: ", error);
+      res.status(500).end();
+    }
+  })();
 });
 
 app.patch("/", (req, res) => {
-  const resource: Partial<Article> = req.body;
-  db.updateAll(resource);
+  (async (params) => {
+    try {
+      const resource: Partial<Article> = req.body;
+      await db.updateAll(resource);
 
-  res.status(204).end();
+      res.status(204).end();
+    } catch (err) {
+      console.log("err: ", err);
+      res.status(500).end();
+    }
+  })();
 });
 
 export const articles = app;
