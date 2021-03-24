@@ -62,4 +62,16 @@ app.put("/:myId", (req, res) => {
   res.status(204).end();
 });
 
+app.patch("/:myId", (req, res) => {
+  const id = req.params.myId;
+  const resource: Partial<Article> = req.body;
+  const existingResource = resources.find((re) => re.id === id);
+  if (existingResource === undefined) {
+    res.status(400).send("object not existing");
+    return;
+  }
+  Object.assign(existingResource, resource);
+  res.status(204).end();
+});
+
 export const articles = app;
