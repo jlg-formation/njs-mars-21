@@ -1,7 +1,8 @@
 import express from "express";
+import { getNewId } from "./id";
 import { Article } from "./interfaces/Article";
 
-const ressource: Article[] = [
+const resources: Article[] = [
   {
     id: "a1",
     name: "Tournevis",
@@ -25,13 +26,40 @@ const ressource: Article[] = [
 const app = express.Router();
 
 app.get("/", (req, res) => {
-  res.json(ressource);
+  res.json(resources);
 });
 
 app.get("/:myId", (req, res) => {
   const id = req.params.myId;
-  const article = ressource.find((a) => a.id === id);
+  const article = resources.find((a) => a.id === id);
   res.json(article);
+});
+
+app.use(express.json());
+
+app.post("/", (req, res) => {
+  const resource: Article = req.body;
+  resource.id = getNewId();
+  // DDOS filtering
+  // monitoring
+  // authentification
+  // validate resource
+  // sanitize resource
+  resources.push(resource);
+  res.status(201).json(resource);
+});
+
+app.put("/:myId", (req, res) => {
+  const id = req.params.myId;
+  const resource: Article = req.body;
+  resource.id = id;
+  const index = resources.findIndex((re) => re.id === id);
+  if (index === -1) {
+    res.status(400).send("object not existing");
+    return;
+  }
+  resources.splice(index, 1, resource);
+  res.status(204).end();
 });
 
 export const articles = app;
