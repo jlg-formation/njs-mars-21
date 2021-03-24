@@ -29,11 +29,9 @@ export class MongoDbServer {
   async retrieve(id: string): Promise<Article> {
     const resource = await this.client
       .db()
-      .collection<Article>("articles")
-      .findOne({
-        id: id,
-      });
-    return resource;
+      .collection<any>("articles")
+      .findOne({ _id: new ObjectId(id) });
+    return resource as Article;
   }
 
   async retrieveAll() {
@@ -80,10 +78,22 @@ export class MongoDbServer {
     await this.client
       .db()
       .collection<any>("articles")
-      .updateOne({ _id: new ObjectId(id) }, resource);
+      .updateOne(
+        { _id: new ObjectId(id) },
+        {
+          $set: resource,
+        },
+        { upsert: true }
+      );
   }
 
   async updateAll(resource: Partial<Article>) {
-    await this.client.db().collection<any>("articles").updateMany({}, resource);
+    await this.client.db().collection<any>("articles").updateMany(
+      {},
+      {
+        $set: resource,
+      },
+      { upsert: true }
+    );
   }
 }
