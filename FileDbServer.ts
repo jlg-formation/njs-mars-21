@@ -1,4 +1,4 @@
-import { readFileSync, writeFile } from "fs";
+import { readFileSync, promises } from "fs";
 import { resolve } from "path";
 
 import { getNewId } from "./id";
@@ -20,23 +20,25 @@ export class FileDbServer {
     }
   }
 
-  save() {
-    writeFile(
-      FILENAME,
-      JSON.stringify(this.resources, null, 2),
-      {
-        encoding: "utf-8",
-      },
-      (err) => {
-        console.error("err: ", err);
-      }
-    );
+  async save() {
+    try {
+      await promises.writeFile(
+        FILENAME,
+        JSON.stringify(this.resources, null, 2),
+        {
+          encoding: "utf-8",
+        }
+      );
+    } catch (err) {
+      console.log("err: ", err);
+      throw err;
+    }
   }
 
-  add(resource: Article): Article {
+  async add(resource: Article): Promise<Article> {
     resource.id = getNewId();
     this.resources.push(resource);
-    this.save();
+    await this.save();
     return resource;
   }
 

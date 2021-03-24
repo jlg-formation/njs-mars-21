@@ -30,8 +30,15 @@ app.delete("/", (req, res) => {
 app.use(express.json());
 
 app.post("/", (req, res) => {
-  const resource = db.add(req.body as Article);
-  res.status(201).json(resource);
+  (async () => {
+    try {
+      const resource = await db.add(req.body as Article);
+      res.status(201).json(resource);
+    } catch (err) {
+      console.log("err: ", err);
+      res.status(500).end();
+    }
+  })();
 });
 
 app.put("/:myId", (req, res) => {
