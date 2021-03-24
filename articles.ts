@@ -1,9 +1,10 @@
-import { FileDbServer } from "./FileDbServer";
 import express from "express";
+
 import { Article } from "./interfaces/Article";
 import { UserError } from "./UserError";
+import { MongoDbServer } from "./MongoDbServer";
 
-const db = new FileDbServer();
+const db = new MongoDbServer();
 
 const app = express.Router();
 

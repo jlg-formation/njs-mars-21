@@ -6,11 +6,11 @@ async function main() {
     const client = new MongoClient("mongodb://localhost:27017/gestion-stock", {
       useUnifiedTopology: true,
     });
-    const connection = await client.connect();
+    await client.connect();
     console.log("successfully connected...");
 
     // create an article
-    const result = await client.db().collection<Article>("articles").insertOne({
+    const result = await client.db().collection<any>("articles").insertOne({
       name: "Tournevis",
       price: 2.45,
       qty: 123,
