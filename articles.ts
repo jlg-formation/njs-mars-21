@@ -1,6 +1,7 @@
 import { FileDbServer } from "./FileDbServer";
 import express from "express";
 import { Article } from "./interfaces/Article";
+import { UserError } from "./UserError";
 
 const db = new FileDbServer();
 
@@ -56,15 +57,23 @@ app.post("/", (req, res) => {
 });
 
 app.put("/:myId", (req, res) => {
-  const id = req.params.myId;
-  const resource: Article = req.body;
-  try {
-    db.rewrite(id, resource);
-  } catch (error) {
-    res.status(400).send((error as Error).message);
-  }
+  (async () => {
+    const id = req.params.myId;
+    const resource: Article = req.body;
+    try {
+      await db.rewrite(id, resource);
+    } catch (error) {
+      if (error instanceof UserError) {
+        res.status(400).send((error as Error).message);
+        return;
+      }
+      console.log("error: ", error);
+      res.status(500).end();
+      return;
+    }
 
-  res.status(204).end();
+    res.status(204).end();
+  })();
 });
 
 app.patch("/:myId", (req, res) => {

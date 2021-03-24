@@ -1,3 +1,4 @@
+import { UserError } from "./UserError";
 import { readFileSync, promises } from "fs";
 import { resolve } from "path";
 
@@ -56,14 +57,14 @@ export class FileDbServer {
     await this.save();
   }
 
-  rewrite(id: string, resource: Article) {
+  async rewrite(id: string, resource: Article) {
     resource.id = id;
     const index = this.resources.findIndex((re) => re.id === id);
     if (index === -1) {
-      throw new Error("object not existing");
+      throw new UserError("object not existing");
     }
     this.resources.splice(index, 1, resource);
-    this.save();
+    await this.save();
   }
 
   update(id: string, resource: Partial<Article>) {
