@@ -1,103 +1,67 @@
+import { FileDbServer } from "./FileDbServer";
 import express from "express";
-import { getNewId } from "./id";
 import { Article } from "./interfaces/Article";
 
-const resources: Article[] = [
-  {
-    id: "a1",
-    name: "Tournevis",
-    price: 2.99,
-    qty: 100,
-  },
-  {
-    id: "a2",
-    name: "Pince",
-    price: 4.5,
-    qty: 34,
-  },
-  {
-    id: "a3",
-    name: "Marteau",
-    price: 8.99,
-    qty: 20,
-  },
-];
+const db = new FileDbServer();
 
 const app = express.Router();
 
 app.get("/", (req, res) => {
-  res.json(resources);
+  res.json(db.resources);
 });
 
 app.get("/:myId", (req, res) => {
   const id = req.params.myId;
-  const article = resources.find((a) => a.id === id);
+  const article = db.resources.find((a) => a.id === id);
   res.json(article);
 });
 
 app.delete("/:myId", (req, res) => {
   const id = req.params.myId;
-  const index = resources.findIndex((re) => re.id === id);
-  if (index === -1) {
-    res.status(204).end();
-    return;
-  }
-  resources.splice(index, 1);
+  db.delete(id);
   res.status(204).end();
 });
 
 app.delete("/", (req, res) => {
-  resources.length = 0;
+  db.deleteAll();
   res.status(204).end();
 });
 
 app.use(express.json());
 
 app.post("/", (req, res) => {
-  const resource: Article = req.body;
-  resource.id = getNewId();
-  // DDOS filtering
-  // monitoring
-  // authentification
-  // validate resource
-  // sanitize resource
-  resources.push(resource);
+  const resource = db.add(req.body as Article);
   res.status(201).json(resource);
 });
 
 app.put("/:myId", (req, res) => {
   const id = req.params.myId;
   const resource: Article = req.body;
-  resource.id = id;
-  const index = resources.findIndex((re) => re.id === id);
-  if (index === -1) {
-    res.status(400).send("object not existing");
-    return;
+  try {
+    db.rewrite(id, resource);
+  } catch (error) {
+    res.status(400).send((error as Error).message);
   }
-  resources.splice(index, 1, resource);
+
   res.status(204).end();
 });
 
 app.patch("/:myId", (req, res) => {
   const id = req.params.myId;
   const resource: Partial<Article> = req.body;
-  const existingResource = resources.find((re) => re.id === id);
-  if (existingResource === undefined) {
-    res.status(400).send("object not existing");
-    return;
+  try {
+    db.update(id, resource);
+  } catch (error) {
+    res.status(400).send((error as Error).message);
   }
-  Object.assign(existingResource, resource);
+
   res.status(204).end();
 });
 
 app.patch("/", (req, res) => {
   const resource: Partial<Article> = req.body;
-  for (const re of resources) {
-    Object.assign(re, resource);
-  }
-  // resources.forEach((re) => {
-  //   Object.assign(re, resource);
-  // });
+  db.updateAll(resource);
+
   res.status(204).end();
 });
 
