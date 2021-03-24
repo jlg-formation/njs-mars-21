@@ -1,5 +1,11 @@
+import { readFileSync, writeFile } from "fs";
+import { resolve } from "path";
+
 import { getNewId } from "./id";
 import { Article } from "./interfaces/Article";
+
+const FILENAME = resolve(process.cwd(), "./db/data.json");
+
 export class FileDbServer {
   resources: Article[] = [
     {
@@ -23,7 +29,16 @@ export class FileDbServer {
   ];
 
   save() {
-    // save to file
+    writeFile(
+      FILENAME,
+      JSON.stringify(this.resources, null, 2),
+      {
+        encoding: "utf-8",
+      },
+      (err) => {
+        console.error("err: ", err);
+      }
+    );
   }
 
   add(resource: Article): Article {
