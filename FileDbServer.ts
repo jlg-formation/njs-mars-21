@@ -36,6 +36,18 @@ export class FileDbServer {
     }
   }
 
+  async retrieve(id: string): Promise<Article> {
+    const resource = this.resources.find((a) => a.id === id);
+    if (!resource) {
+      throw new UserError("cannot find resource");
+    }
+    return resource;
+  }
+
+  async retrieveAll() {
+    return this.resources;
+  }
+
   async add(resource: Article): Promise<Article> {
     resource.id = getNewId();
     this.resources.push(resource);

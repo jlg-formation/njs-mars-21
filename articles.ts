@@ -8,13 +8,26 @@ const db = new FileDbServer();
 const app = express.Router();
 
 app.get("/", (req, res) => {
-  res.json(db.resources);
+  (async () => {
+    res.json(await db.retrieveAll());
+  })();
 });
 
 app.get("/:myId", (req, res) => {
-  const id = req.params.myId;
-  const article = db.resources.find((a) => a.id === id);
-  res.json(article);
+  (async () => {
+    try {
+      const id = req.params.myId;
+      const article = await db.retrieve(id);
+      res.json(article);
+    } catch (err) {
+      if (err instanceof UserError) {
+        res.status(404).end();
+        return;
+      }
+      console.log("err: ", err);
+      res.status(500).end();
+    }
+  })();
 });
 
 app.delete("/:myId", (req, res) => {
