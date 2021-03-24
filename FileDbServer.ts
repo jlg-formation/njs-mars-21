@@ -4,29 +4,21 @@ import { resolve } from "path";
 import { getNewId } from "./id";
 import { Article } from "./interfaces/Article";
 
-const FILENAME = resolve(process.cwd(), "./db/data.json");
+const FILENAME = resolve(process.cwd(), "./db/articles.json");
 
 export class FileDbServer {
-  resources: Article[] = [
-    {
-      id: "a1",
-      name: "Tournevis",
-      price: 2.99,
-      qty: 100,
-    },
-    {
-      id: "a2",
-      name: "Pince",
-      price: 4.5,
-      qty: 34,
-    },
-    {
-      id: "a3",
-      name: "Marteau",
-      price: 8.99,
-      qty: 20,
-    },
-  ];
+  resources: Article[];
+
+  constructor() {
+    try {
+      this.resources = JSON.parse(
+        readFileSync(FILENAME, { encoding: "utf-8" })
+      );
+    } catch (err) {
+      console.error("err: ", err);
+      process.exit(1);
+    }
+  }
 
   save() {
     writeFile(
