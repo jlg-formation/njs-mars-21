@@ -17,9 +17,16 @@ app.get("/:myId", (req, res) => {
 });
 
 app.delete("/:myId", (req, res) => {
-  const id = req.params.myId;
-  db.delete(id);
-  res.status(204).end();
+  (async () => {
+    try {
+      const id = req.params.myId;
+      await db.delete(id);
+      res.status(204).end();
+    } catch (err) {
+      console.log("err: ", err);
+      res.status(500).end();
+    }
+  })();
 });
 
 app.delete("/", (req, res) => {

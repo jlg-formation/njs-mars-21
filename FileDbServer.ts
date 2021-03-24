@@ -42,13 +42,13 @@ export class FileDbServer {
     return resource;
   }
 
-  delete(id: string) {
+  async delete(id: string): Promise<void> {
     const index = this.resources.findIndex((re) => re.id === id);
     if (index === -1) {
       return;
     }
     this.resources.splice(index, 1);
-    this.save();
+    await this.save();
   }
 
   deleteAll() {
