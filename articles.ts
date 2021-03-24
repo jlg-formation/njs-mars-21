@@ -35,6 +35,22 @@ app.get("/:myId", (req, res) => {
   res.json(article);
 });
 
+app.delete("/:myId", (req, res) => {
+  const id = req.params.myId;
+  const index = resources.findIndex((re) => re.id === id);
+  if (index === -1) {
+    res.status(204).end();
+    return;
+  }
+  resources.splice(index, 1);
+  res.status(204).end();
+});
+
+app.delete("/", (req, res) => {
+  resources.length = 0;
+  res.status(204).end();
+});
+
 app.use(express.json());
 
 app.post("/", (req, res) => {
