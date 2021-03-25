@@ -4,6 +4,7 @@ import {api} from './api';
 import serveIndex from 'serve-index';
 import {Server} from 'http';
 import {MongoDbServer} from './MongoDbServer';
+import {accessLog} from './accessLog';
 
 export class WebServer {
   app: Express;
@@ -13,10 +14,7 @@ export class WebServer {
     const app = express();
     const www = resolve(process.cwd(), './public');
 
-    app.use((req, res, next) => {
-      console.log('req.url', req.url);
-      next();
-    });
+    app.use(accessLog());
 
     app.use('/api', api(this.db));
 

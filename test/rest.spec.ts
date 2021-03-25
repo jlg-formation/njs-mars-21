@@ -11,6 +11,8 @@ const mongoUri =
 
 const url = `http://localhost:${port}/api/articles`;
 
+console.log = () => {};
+
 describe('REST', () => {
   const server = new WebServer(port, mongoUri);
 
