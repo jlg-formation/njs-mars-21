@@ -1,12 +1,12 @@
-import express from "express";
-import { articles } from "./articles";
+import express from 'express';
+import {articles} from './articles';
 
 const app = express.Router();
 
-app.get("/date", (req, res) => {
-  res.json({ date: new Date() });
+app.get('/date', (req, res) => {
+  res.json({date: new Date()});
 });
 
-app.use("/articles", articles);
+app.use('/articles', articles);
 
 export const api = app;

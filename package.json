@@ -6,7 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node server.ts",
-    "start:dev": "npx nodemon"
+    "start:dev": "npx nodemon",
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm.cmd run compile",
+    "pretest": "npm.cmd run compile",
+    "posttest": "npm.cmd run lint"
   },
   "author": "Jean-Louis GUENEGO",
   "license": "ISC",
@@ -20,6 +27,7 @@
     "@types/mongodb": "^3.6.10",
     "@types/node": "^14.14.35",
     "@types/serve-index": "^1.7.30",
+    "gts": "^3.1.0",
     "nodemon": "^2.0.7",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
