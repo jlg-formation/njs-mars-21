@@ -13,7 +13,7 @@ const url = `http://localhost:${port}/api/articles`;
 
 console.log = () => {};
 
-const sleep = (d: number) => new Promise(r => setTimeout(r, d));
+// const sleep = (d: number) => new Promise(r => setTimeout(r, d));
 
 describe('REST', () => {
   const server = new WebServer(port, mongoUri);
