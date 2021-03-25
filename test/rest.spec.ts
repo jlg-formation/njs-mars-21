@@ -13,6 +13,8 @@ const url = `http://localhost:${port}/api/articles`;
 
 console.log = () => {};
 
+const sleep = (d: number) => new Promise(r => setTimeout(r, d));
+
 describe('REST', () => {
   const server = new WebServer(port, mongoUri);
 
@@ -31,7 +33,9 @@ describe('REST', () => {
     console.log('stop with success');
   });
 
-  it('should remove all the articles', async () => {
+  it('should remove all the articles', async function () {
+    this.timeout(5000);
+    // await sleep(4000);
     const response = await fetch(url, {
       method: 'DELETE',
     });
@@ -42,6 +46,7 @@ describe('REST', () => {
     const articles = await response2.json();
     assert.strictEqual(articles.length, 0);
   });
+
   it('should create an article', async () => {
     const article = {
       name: 'Tournevis',
