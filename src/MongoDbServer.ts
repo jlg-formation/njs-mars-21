@@ -1,6 +1,12 @@
 import {MongoClient, ObjectId} from 'mongodb';
 
 import {Article} from './interfaces/Article';
+import {MongoResource} from './interfaces/MongoResource';
+
+function correctId(resource: MongoResource) {
+  resource.id = resource._id;
+  delete resource._id;
+}
 
 export class MongoDbServer {
   client!: MongoClient;
@@ -22,10 +28,12 @@ export class MongoDbServer {
   }
 
   async retrieve(id: string): Promise<Article> {
-    const resource = await this.client
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resource: any = await this.client
       .db()
       .collection<unknown>('articles')
       .findOne({_id: new ObjectId(id)});
+    correctId(resource);
     return resource as Article;
   }
 
@@ -36,8 +44,7 @@ export class MongoDbServer {
       .find({})
       .toArray();
     return resources.map(r => {
-      r.id = r._id;
-      delete r._id;
+      correctId(r);
       return r;
     });
   }
@@ -47,7 +54,7 @@ export class MongoDbServer {
       .db()
       .collection<unknown>('articles')
       .insertOne((resource as unknown) as Pick<unknown, never>);
-
+    correctId((result.ops[0] as unknown) as MongoResource);
     return (result.ops[0] as unknown) as Article;
   }
 
