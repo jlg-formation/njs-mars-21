@@ -1,20 +1,20 @@
-import express from "express";
+import express from 'express';
 
-import { Article } from "./interfaces/Article";
-import { UserError } from "./UserError";
-import { MongoDbServer } from "./MongoDbServer";
+import {Article} from './interfaces/Article';
+import {UserError} from './UserError';
+import {MongoDbServer} from './MongoDbServer';
 
 const db = new MongoDbServer();
 
 const app = express.Router();
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   (async () => {
     res.json(await db.retrieveAll());
   })();
 });
 
-app.get("/:myId", (req, res) => {
+app.get('/:myId', (req, res) => {
   (async () => {
     try {
       const id = req.params.myId;
@@ -25,32 +25,32 @@ app.get("/:myId", (req, res) => {
         res.status(404).end();
         return;
       }
-      console.log("err: ", err);
+      console.log('err: ', err);
       res.status(500).end();
     }
   })();
 });
 
-app.delete("/:myId", (req, res) => {
+app.delete('/:myId', (req, res) => {
   (async () => {
     try {
       const id = req.params.myId;
       await db.delete(id);
       res.status(204).end();
     } catch (err) {
-      console.log("err: ", err);
+      console.log('err: ', err);
       res.status(500).end();
     }
   })();
 });
 
-app.delete("/", (req, res) => {
+app.delete('/', (req, res) => {
   (async () => {
     try {
       await db.deleteAll();
       res.status(204).end();
     } catch (err) {
-      console.log("err: ", err);
+      console.log('err: ', err);
       res.status(500).end();
     }
   })();
@@ -58,19 +58,19 @@ app.delete("/", (req, res) => {
 
 app.use(express.json());
 
-app.post("/", (req, res) => {
+app.post('/', (req, res) => {
   (async () => {
     try {
       const resource = await db.add(req.body as Article);
       res.status(201).json(resource);
     } catch (err) {
-      console.log("err: ", err);
+      console.log('err: ', err);
       res.status(500).end();
     }
   })();
 });
 
-app.put("/:myId", (req, res) => {
+app.put('/:myId', (req, res) => {
   (async () => {
     const id = req.params.myId;
     const resource: Article = req.body;
@@ -81,7 +81,7 @@ app.put("/:myId", (req, res) => {
         res.status(400).send((error as Error).message);
         return;
       }
-      console.log("error: ", error);
+      console.log('error: ', error);
       res.status(500).end();
       return;
     }
@@ -90,7 +90,7 @@ app.put("/:myId", (req, res) => {
   })();
 });
 
-app.patch("/:myId", (req, res) => {
+app.patch('/:myId', (req, res) => {
   (async () => {
     try {
       const id = req.params.myId;
@@ -102,21 +102,21 @@ app.patch("/:myId", (req, res) => {
         res.status(400).send((error as Error).message);
         return;
       }
-      console.log("error: ", error);
+      console.log('error: ', error);
       res.status(500).end();
     }
   })();
 });
 
-app.patch("/", (req, res) => {
-  (async (params) => {
+app.patch('/', (req, res) => {
+  (async () => {
     try {
       const resource: Partial<Article> = req.body;
       await db.updateAll(resource);
 
       res.status(204).end();
     } catch (err) {
-      console.log("err: ", err);
+      console.log('err: ', err);
       res.status(500).end();
     }
   })();

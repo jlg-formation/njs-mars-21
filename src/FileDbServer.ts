@@ -1,22 +1,20 @@
-import { UserError } from "./UserError";
-import { readFileSync, promises } from "fs";
-import { resolve } from "path";
+import {UserError} from './UserError';
+import {readFileSync, promises} from 'fs';
+import {resolve} from 'path';
 
-import { getNewId } from "./id";
-import { Article } from "./interfaces/Article";
+import {getNewId} from './id';
+import {Article} from './interfaces/Article';
 
-const FILENAME = resolve(process.cwd(), "./db/articles.json");
+const FILENAME = resolve(process.cwd(), './db/articles.json');
 
 export class FileDbServer {
   resources: Article[];
 
   constructor() {
     try {
-      this.resources = JSON.parse(
-        readFileSync(FILENAME, { encoding: "utf-8" })
-      );
+      this.resources = JSON.parse(readFileSync(FILENAME, {encoding: 'utf-8'}));
     } catch (err) {
-      console.error("err: ", err);
+      console.error('err: ', err);
       process.exit(1);
     }
   }
@@ -27,19 +25,19 @@ export class FileDbServer {
         FILENAME,
         JSON.stringify(this.resources, null, 2),
         {
-          encoding: "utf-8",
+          encoding: 'utf-8',
         }
       );
     } catch (err) {
-      console.log("err: ", err);
+      console.log('err: ', err);
       throw err;
     }
   }
 
   async retrieve(id: string): Promise<Article> {
-    const resource = this.resources.find((a) => a.id === id);
+    const resource = this.resources.find(a => a.id === id);
     if (!resource) {
-      throw new UserError("cannot find resource");
+      throw new UserError('cannot find resource');
     }
     return resource;
   }
@@ -56,7 +54,7 @@ export class FileDbServer {
   }
 
   async delete(id: string): Promise<void> {
-    const index = this.resources.findIndex((re) => re.id === id);
+    const index = this.resources.findIndex(re => re.id === id);
     if (index === -1) {
       return;
     }
@@ -71,18 +69,18 @@ export class FileDbServer {
 
   async rewrite(id: string, resource: Article) {
     resource.id = id;
-    const index = this.resources.findIndex((re) => re.id === id);
+    const index = this.resources.findIndex(re => re.id === id);
     if (index === -1) {
-      throw new UserError("object not existing");
+      throw new UserError('object not existing');
     }
     this.resources.splice(index, 1, resource);
     await this.save();
   }
 
   async update(id: string, resource: Partial<Article>) {
-    const existingResource = this.resources.find((re) => re.id === id);
+    const existingResource = this.resources.find(re => re.id === id);
     if (existingResource === undefined) {
-      throw new UserError("object not existing");
+      throw new UserError('object not existing');
     }
     Object.assign(existingResource, resource);
     await this.save();

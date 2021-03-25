@@ -2,7 +2,7 @@
   "name": "back",
   "version": "1.0.0",
   "description": "Site de gestion de stock d'outil",
-  "main": "server.ts",
+  "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node server.ts",

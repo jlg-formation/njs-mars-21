@@ -1,24 +1,21 @@
-console.log('Try npm run lint/fix!');
+import express from 'express';
+import serveIndex from 'serve-index';
+import {api} from './api';
 
-const longString =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut aliquet diam.';
+const app = express();
+const port = 3000;
+const www = './public';
 
-const trailing = 'Semicolon';
+app.use((req, res, next) => {
+  console.log('req.url', req.url);
+  next();
+});
 
-const why = 'am I tabbed?';
+app.use('/api', api);
 
-export function doSomeStuff(
-  withThis: string,
-  andThat: string,
-  andThose: string[]
-) {
-  //function on one line
-  if (!andThose.length) {
-    return false;
-  }
-  console.log(withThis);
-  console.log(andThat);
-  console.dir(andThose);
-  return;
-}
-// TODO: more examples
+app.use(express.static(www));
+app.use(serveIndex(www, {icons: true}));
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
