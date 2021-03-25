@@ -75,6 +75,7 @@ describe('REST', () => {
     const status = response.status;
     assert.strictEqual(status, 201);
     const createdArticle = await response.json();
+    id2 = createdArticle.id;
     assert.ok(createdArticle.id);
 
     const response2 = await fetch(url);
@@ -109,7 +110,57 @@ describe('REST', () => {
     const article = await response2.json();
     assert.deepStrictEqual(newArticle, article);
   });
-  it('should update the first article', async () => {});
-  it('should update all the article', async () => {});
-  it('should delete one article', async () => {});
+  it('should update the second article', async () => {
+    const patchedArticle = {
+      name: 'Joli Marteau',
+    };
+    const response = await fetch(url + '/' + id2, {
+      method: 'PATCH',
+      body: JSON.stringify(patchedArticle),
+      headers: {'Content-Type': 'application/json'},
+    });
+    const status = response.status;
+    assert.strictEqual(status, 204);
+
+    const response2 = await fetch(url + '/' + id2);
+    const article = await response2.json();
+    assert.deepStrictEqual(
+      {
+        id: id2,
+        price: 4.99,
+        qty: 13,
+        ...patchedArticle,
+      },
+      article
+    );
+  });
+  it('should update all the article', async () => {
+    const patchedArticle = {
+      price: 5.0,
+    };
+    const response = await fetch(url, {
+      method: 'PATCH',
+      body: JSON.stringify(patchedArticle),
+      headers: {'Content-Type': 'application/json'},
+    });
+    const status = response.status;
+    assert.strictEqual(status, 204);
+
+    const response2 = await fetch(url);
+    const articles = await response2.json();
+    for (const a of articles) {
+      assert.strictEqual(a.price, patchedArticle.price);
+    }
+  });
+  it('should delete one article', async () => {
+    const response = await fetch(url + '/' + id2, {
+      method: 'DELETE',
+    });
+    const status = response.status;
+    assert.strictEqual(status, 204);
+
+    const response2 = await fetch(url);
+    const articles = await response2.json();
+    assert.strictEqual(articles.length, 1);
+  });
 });
