@@ -5,22 +5,20 @@ import {Article} from './interfaces/Article';
 export class MongoDbServer {
   client!: MongoClient;
 
-  constructor() {
-    (async () => {
-      try {
-        this.client = new MongoClient(
-          'mongodb://localhost:27017/gestion-stock',
-          {
-            useUnifiedTopology: true,
-          }
-        );
-        await this.client.connect();
-        console.log('successfully connected to Mongo...');
-      } catch (err) {
-        console.error('err: ', err);
-        process.exit(1);
-      }
-    })();
+  constructor(private uri: string) {
+    this.client = new MongoClient(uri, {
+      useUnifiedTopology: true,
+    });
+  }
+
+  async start() {
+    await this.client.connect();
+    console.log('successfully connected to Mongo...');
+  }
+
+  async stop() {
+    await this.client.close();
+    console.log('MongoDB connexion: closed.');
   }
 
   async retrieve(id: string): Promise<Article> {

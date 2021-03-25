@@ -1,12 +1,14 @@
+import {MongoDbServer} from './MongoDbServer';
 import express from 'express';
 import {articles} from './articles';
 
-const app = express.Router();
+export const api = (db: MongoDbServer) => {
+  const app = express.Router();
 
-app.get('/date', (req, res) => {
-  res.json({date: new Date()});
-});
+  app.get('/date', (req, res) => {
+    res.json({date: new Date()});
+  });
 
-app.use('/articles', articles);
-
-export const api = app;
+  app.use('/articles', articles(db));
+  return app;
+};
