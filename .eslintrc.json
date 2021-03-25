@@ -3,5 +3,8 @@
   "rules": {
     "node/no-unsupported-features/node-builtins": "off",
     "no-process-exit": "off"
+  },
+  "env": {
+    "mocha": true
   }
 }

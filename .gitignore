@@ -1,3 +1,4 @@
 node_modules
+build
 toto.txt
 db/articles.json
