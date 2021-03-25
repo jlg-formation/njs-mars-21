@@ -13,6 +13,10 @@ const url = `http://localhost:${port}/api/articles`;
 
 describe('REST', () => {
   const server = new WebServer(port, mongoUri);
+
+  let id1: string;
+  let id2: string;
+
   before(async () => {
     // start a server on port 3333
     await server.start();
@@ -50,14 +54,33 @@ describe('REST', () => {
     const status = response.status;
     assert.strictEqual(status, 201);
     const createdArticle = await response.json();
-    console.log('createdArticle: ', createdArticle);
+    id1 = createdArticle.id;
     assert.ok(createdArticle.id);
 
     const response2 = await fetch(url);
     const articles = await response2.json();
     assert.strictEqual(articles.length, 1);
   });
-  it('should create another article', async () => {});
+  it('should create another article', async () => {
+    const article = {
+      name: 'Marteau',
+      price: 4.99,
+      qty: 13,
+    };
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(article),
+      headers: {'Content-Type': 'application/json'},
+    });
+    const status = response.status;
+    assert.strictEqual(status, 201);
+    const createdArticle = await response.json();
+    assert.ok(createdArticle.id);
+
+    const response2 = await fetch(url);
+    const articles = await response2.json();
+    assert.strictEqual(articles.length, 2);
+  });
   it('should get all the articles', async () => {
     const response = await fetch(url);
     const status = response.status;
@@ -65,9 +88,27 @@ describe('REST', () => {
     debug('articles: ', articles);
     assert.ok(articles instanceof Array);
     assert.strictEqual(status, 200);
-    assert.strictEqual(articles.length, 1);
+    assert.strictEqual(articles.length, 2);
   });
-  it('should rewrite the first article', async () => {});
+  it('should rewrite the first article', async () => {
+    const newArticle = {
+      id: id1,
+      name: 'Tournevis cruciforme',
+      price: 3.66,
+      qty: 5,
+    };
+    const response = await fetch(url + '/' + id1, {
+      method: 'PUT',
+      body: JSON.stringify(newArticle),
+      headers: {'Content-Type': 'application/json'},
+    });
+    const status = response.status;
+    assert.strictEqual(status, 204);
+
+    const response2 = await fetch(url + '/' + id1);
+    const article = await response2.json();
+    assert.deepStrictEqual(newArticle, article);
+  });
   it('should update the first article', async () => {});
   it('should update all the article', async () => {});
   it('should delete one article', async () => {});
