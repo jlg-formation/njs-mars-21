@@ -1,16 +1,18 @@
-import {UserError} from './UserError';
+import {UserError} from '../UserError';
 import {readFileSync, promises} from 'fs';
 import {resolve} from 'path';
 
-import {getNewId} from './id';
-import {Article} from './interfaces/Article';
+import {getNewId} from '../id';
+import {Article} from '../interfaces/Article';
+import {DbServer} from './DbServer';
 
 const FILENAME = resolve(process.cwd(), './db/articles.json');
 
-export class FileDbServer {
+export class FileDbServer extends DbServer {
   resources: Article[];
 
   constructor() {
+    super();
     try {
       this.resources = JSON.parse(readFileSync(FILENAME, {encoding: 'utf-8'}));
     } catch (err) {
@@ -18,6 +20,10 @@ export class FileDbServer {
       process.exit(1);
     }
   }
+
+  async start(): Promise<void> {}
+
+  async stop(): Promise<void> {}
 
   async save() {
     try {

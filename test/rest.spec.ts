@@ -7,7 +7,7 @@ const debug = dbg('njs:back:rest.spec.ts');
 
 const port = +(process.env.TEST_PORT || 3333);
 const mongoUri =
-  process.env.TEST_MONGO_URI || 'mongodb://localhost:27017/gestion-stock';
+  process.env.TEST_DB_URI || 'mongodb://localhost:27017/gestion-stock';
 
 const url = `http://localhost:${port}/api/articles`;
 

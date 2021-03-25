@@ -1,15 +1,15 @@
+import {DbServerFactory} from './dbserver/DbServerFactory';
 import {resolve} from 'path';
 import express, {Express} from 'express';
 import {api} from './api';
 import serveIndex from 'serve-index';
 import {Server} from 'http';
-import {MongoDbServer} from './MongoDbServer';
 import {accessLog} from './accessLog';
 
 export class WebServer {
   app: Express;
   httpServer!: Server;
-  db = new MongoDbServer(this.uri);
+  db = DbServerFactory.create(this.uri);
   constructor(private port: number, private uri: string) {
     const app = express();
     const www = resolve(process.cwd(), './public');

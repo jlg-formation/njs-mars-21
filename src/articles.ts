@@ -1,10 +1,10 @@
-import {MongoDbServer} from './MongoDbServer';
 import express from 'express';
 
 import {Article} from './interfaces/Article';
 import {UserError} from './UserError';
+import {DbServer} from './dbserver/DbServer';
 
-export const articles = (db: MongoDbServer) => {
+export const articles = (db: DbServer) => {
   const app = express.Router();
 
   app.get('/', (req, res) => {

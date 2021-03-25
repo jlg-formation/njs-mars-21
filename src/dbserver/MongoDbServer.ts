@@ -1,17 +1,19 @@
 import {MongoClient, ObjectId} from 'mongodb';
 
-import {Article} from './interfaces/Article';
-import {MongoResource} from './interfaces/MongoResource';
+import {Article} from '../interfaces/Article';
+import {MongoResource} from '../interfaces/MongoResource';
+import {DbServer} from './DbServer';
 
 function correctId(resource: MongoResource) {
   resource.id = resource._id;
   delete resource._id;
 }
 
-export class MongoDbServer {
+export class MongoDbServer extends DbServer {
   client!: MongoClient;
 
   constructor(private uri: string) {
+    super();
     this.client = new MongoClient(uri, {
       useUnifiedTopology: true,
     });
