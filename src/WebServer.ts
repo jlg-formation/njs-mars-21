@@ -14,9 +14,15 @@ export class WebServer {
     const app = express();
     const www = resolve(process.cwd(), './public');
 
+    app.set('view engine', 'ejs');
+
     app.use(accessLog());
 
     app.use('/api', api(this.db));
+
+    app.get('/', (req, res) => {
+      res.render('pages/index');
+    });
 
     app.use(express.static(www));
     app.use(serveIndex(www, {icons: true}));
