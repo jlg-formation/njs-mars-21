@@ -5,12 +5,10 @@ import {Article} from '../interfaces/Article';
 import {MongooseResource} from '../interfaces/MongooseResource';
 import {DbServer} from './DbServer';
 
-function correctId(resource: MongooseResource): MongooseResource {
-  const result = {...resource};
-  delete result.__v;
-  result.id = result._id;
-  delete result._id;
-  return result;
+function correctId(resource: MongooseResource) {
+  delete resource.__v;
+  resource.id = resource._id;
+  delete resource._id;
 }
 
 const ArticleModel = mongoose.model(
@@ -79,7 +77,8 @@ export class MongooseDbServer extends DbServer {
   async add(resource: Article): Promise<Article> {
     const res = new ArticleModel(resource);
     const result = await res.save();
-    const r = correctId(result.toObject() as MongooseResource);
+    const r = result.toObject();
+    correctId(r as MongooseResource);
     return (r as unknown) as Article;
   }
 
