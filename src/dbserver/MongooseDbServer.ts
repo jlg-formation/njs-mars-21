@@ -67,15 +67,14 @@ export class MongooseDbServer extends DbServer {
   }
 
   async retrieveAll() {
-    const resources = await this.client
-      .db()
-      .collection<Article>('articles')
-      .find({})
-      .toArray();
-    return resources.map(r => {
-      correctId(r);
-      return r;
+    const result = await ArticleModel.find({}).exec();
+    const r = result.map(re => {
+      const obj = re.toObject();
+      correctId(obj as MongooseResource);
+      return obj;
     });
+
+    return (r as unknown) as Article[];
   }
 
   async add(resource: Article): Promise<Article> {
