@@ -23,5 +23,9 @@ export const frontend = (db: DbServer) => {
     })();
   });
 
+  app.get('/add', (req, res) => {
+    res.render('pages/add', {});
+  });
+
   return app;
 };

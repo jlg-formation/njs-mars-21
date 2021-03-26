@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: sans-serif;
 }
@@ -27,8 +31,28 @@ table tbody tr:hover {
 
 button {
   padding: 0.5em 1em;
+  cursor: pointer;
 }
 
 nav {
   margin-bottom: 1em;
+}
+
+form {
+  display: flex;
+  flex-flow: column;
+  max-width: 25em;
+}
+
+form label {
+  margin-bottom: 1em;
+}
+
+form button {
+  margin-top: 3em;
+}
+
+form input {
+  width: 100%;
+  padding: 0.5em 1em;
 }
