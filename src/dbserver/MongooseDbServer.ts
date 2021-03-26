@@ -93,7 +93,7 @@ export class MongooseDbServer extends DbServer {
   }
 
   async deleteAll() {
-    await this.client.db().collection<unknown>('articles').deleteMany({});
+    await ArticleModel.deleteMany({}).exec();
   }
 
   async rewrite(id: string, resource: Article) {
