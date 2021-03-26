@@ -86,10 +86,10 @@ export class MongooseDbServer extends DbServer {
   }
 
   async delete(id: string): Promise<void> {
-    await this.client
-      .db()
-      .collection<unknown>('articles')
-      .deleteOne({_id: new ObjectId(id)});
+    if (!ObjectId.isValid(id)) {
+      return;
+    }
+    await ArticleModel.findByIdAndDelete(id).exec();
   }
 
   async deleteAll() {
