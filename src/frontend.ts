@@ -5,7 +5,10 @@ export const frontend = (db: DbServer) => {
   const app = express.Router();
 
   app.get('/', (req, res) => {
-    res.render('pages/index', {articles: [{name: 'toto'}, {name: 'titi'}]});
+    (async () => {
+      const articles = await db.retrieveAll();
+      res.render('pages/index', {articles: articles});
+    })();
   });
 
   return app;
