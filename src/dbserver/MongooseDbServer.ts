@@ -1,4 +1,4 @@
-import {MongoClient, ObjectId} from 'mongodb';
+import {ObjectId} from 'mongodb';
 import mongoose, {Schema} from 'mongoose';
 
 import {Article} from '../interfaces/Article';
@@ -35,27 +35,23 @@ const ArticleModel = mongoose.model(
 );
 
 export class MongooseDbServer extends DbServer {
-  client!: MongoClient;
-
   constructor(private uri: string) {
     super();
-    this.client = new MongoClient(uri, {
-      useUnifiedTopology: true,
-    });
   }
 
   async start() {
     await mongoose.connect(this.uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
     });
 
     console.log('successfully connected to Mongo with Mongoose...');
   }
 
   async stop() {
-    await this.client.close();
-    console.log('MongoDB connexion: closed.');
+    await mongoose.disconnect();
+    console.log('Mongoose connexion: closed.');
   }
 
   async retrieve(id: string): Promise<Article> {
@@ -105,31 +101,29 @@ export class MongooseDbServer extends DbServer {
     if (!ObjectId.isValid(id)) {
       throw new UserError('id not valid');
     }
-    await ArticleModel.findOneAndReplace({_id: id}, resource, {
+    const result = await ArticleModel.findOneAndReplace({_id: id}, resource, {
       overwrite: true,
     }).exec();
+    if (result === null) {
+      throw new UserError('not exist');
+    }
   }
 
   async update(id: string, resource: Partial<Article>) {
-    await this.client
-      .db()
-      .collection<unknown>('articles')
-      .updateOne(
-        {_id: new ObjectId(id)},
-        {
-          $set: resource,
-        },
-        {upsert: true}
-      );
+    if (!ObjectId.isValid(id)) {
+      throw new UserError('id not valid');
+    }
+    const result = await ArticleModel.findOneAndUpdate(
+      {_id: id},
+      resource,
+      {}
+    ).exec();
+    if (result === null) {
+      throw new UserError('not exist');
+    }
   }
 
   async updateAll(resource: Partial<Article>) {
-    await this.client.db().collection<unknown>('articles').updateMany(
-      {},
-      {
-        $set: resource,
-      },
-      {upsert: true}
-    );
+    await ArticleModel.updateMany({}, resource, {}).exec();
   }
 }
