@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <%= 1 + 2 %>
     <h1>Liste des articles</h1>
     <table>
       <thead>
@@ -17,26 +16,13 @@
         <th>Quantité</th>
       </thead>
       <tbody>
+        <% articles.forEach((article) => { %>
         <tr>
-          <td>Tournevis</td>
+          <td><%= article.name %></td>
           <td>2.33 €</td>
           <td>345</td>
         </tr>
-        <tr>
-          <td>Tournevis</td>
-          <td>2.33 €</td>
-          <td>345</td>
-        </tr>
-        <tr>
-          <td>Tournevis</td>
-          <td>2.33 €</td>
-          <td>345</td>
-        </tr>
-        <tr>
-          <td>Tournevis</td>
-          <td>2.33 €</td>
-          <td>345</td>
-        </tr>
+        <% }); %>
       </tbody>
     </table>
   </body>

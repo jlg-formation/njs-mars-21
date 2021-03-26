@@ -21,7 +21,7 @@ export class WebServer {
     app.use('/api', api(this.db));
 
     app.get('/', (req, res) => {
-      res.render('pages/index');
+      res.render('pages/index', {articles: [{name: 'toto'}, {name: 'titi'}]});
     });
 
     app.use(express.static(www));
