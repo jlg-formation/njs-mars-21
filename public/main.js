@@ -27,4 +27,7 @@ function refreshArticles() {
       tr.classList.remove('selected');
     }
   });
+
+  const suppressBtn = document.querySelector('#suppress-btn');
+  suppressBtn.hidden = selectedArticleIds.size === 0;
 }

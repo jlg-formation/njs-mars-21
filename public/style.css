@@ -60,3 +60,7 @@ form input {
 table tbody tr.selected {
   background-color: aqua;
 }
+
+.button {
+  text-decoration: none;
+}
