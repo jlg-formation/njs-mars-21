@@ -19,3 +19,8 @@ table thead {
 table tbody tr:nth-child(even) {
   background-color: #eee;
 }
+
+table tbody tr:hover {
+  cursor: pointer;
+  background-color: #ddd;
+}

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Liste des articles</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="img/logo.svg" type="image/svg" />
   </head>
   <body>
     <h1>Liste des articles</h1>
@@ -17,7 +18,7 @@
       </thead>
       <tbody>
         <% articles.forEach((article) => { %>
-        <tr>
+        <tr ondblclick="getDetails('<%= article.id %>')">
           <td><%= article.name %></td>
           <td><%= currency(article.price) %> €</td>
           <td><%= article.qty %></td>
@@ -25,5 +26,6 @@
         <% }); %>
       </tbody>
     </table>
+    <script src="main.js"></script>
   </body>
 </html>
