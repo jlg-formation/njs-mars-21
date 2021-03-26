@@ -5,6 +5,7 @@ import {api} from './api';
 import serveIndex from 'serve-index';
 import {Server} from 'http';
 import {accessLog} from './accessLog';
+import {frontend} from './frontend';
 
 export class WebServer {
   app: Express;
@@ -20,9 +21,7 @@ export class WebServer {
 
     app.use('/api', api(this.db));
 
-    app.get('/', (req, res) => {
-      res.render('pages/index', {articles: [{name: 'toto'}, {name: 'titi'}]});
-    });
+    app.use('/', frontend(this.db));
 
     app.use(express.static(www));
     app.use(serveIndex(www, {icons: true}));
