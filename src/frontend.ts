@@ -23,7 +23,9 @@ export const frontend = (db: DbServer) => {
         const article = await db.retrieve(id);
         res.render('pages/detail', {article, currency});
       } catch (err) {
-        res.status(404).end();
+        console.log('err: ', err);
+        // res.status(404).end();
+        throw err;
       }
     })();
   });
