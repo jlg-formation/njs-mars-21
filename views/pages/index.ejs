@@ -23,7 +23,11 @@
       </thead>
       <tbody>
         <% articles.forEach((article) => { %>
-        <tr ondblclick="getDetails('<%= article.id %>')">
+        <tr
+          ondblclick="getDetails('<%= article.id %>')"
+          onclick="toggle('<%= article.id %>')"
+          id="<%= article.id %>"
+        >
           <td><%= article.name %></td>
           <td><%= currency(article.price) %> €</td>
           <td><%= article.qty %></td>
