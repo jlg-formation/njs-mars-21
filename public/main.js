@@ -31,3 +31,11 @@ function refreshArticles() {
   const suppressBtn = document.querySelector('#suppress-btn');
   suppressBtn.hidden = selectedArticleIds.size === 0;
 }
+
+window.remove = async function () {
+  console.log('remove: ', selectedArticleIds);
+  for (const id of selectedArticleIds) {
+    await fetch(`/api/articles/${id}`, {method: 'DELETE'});
+  }
+  window.location = '/';
+};
