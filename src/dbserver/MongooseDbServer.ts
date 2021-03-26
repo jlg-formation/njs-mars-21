@@ -15,13 +15,18 @@ function correctId(resource: MongooseResource) {
 const ArticleModel = mongoose.model(
   'Article',
   new Schema({
-    name: String,
+    name: {
+      required: true,
+      type: String,
+    },
     price: {
+      required: true,
       type: Number,
       get: (v: number) => Math.round(v * 100) / 100,
       set: (v: number) => Math.round(v * 100) / 100,
     },
     qty: {
+      required: false,
       type: Number,
       get: (v: number) => Math.round(v),
       set: (v: number) => Math.round(v),
@@ -97,10 +102,12 @@ export class MongooseDbServer extends DbServer {
   }
 
   async rewrite(id: string, resource: Article) {
-    await this.client
-      .db()
-      .collection<unknown>('articles')
-      .replaceOne({_id: new ObjectId(id)}, resource);
+    if (!ObjectId.isValid(id)) {
+      throw new UserError('id not valid');
+    }
+    await ArticleModel.findOneAndReplace({_id: id}, resource, {
+      overwrite: true,
+    }).exec();
   }
 
   async update(id: string, resource: Partial<Article>) {
