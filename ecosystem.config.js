@@ -18,6 +18,7 @@ module.exports = {
         NODE_ENV: 'production',
         TEST_DB_URI: 'file',
         DB_MONGOOSE: undefined,
+        TEST_PORT: 3334,
       },
     },
   ],
