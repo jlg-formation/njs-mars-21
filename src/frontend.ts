@@ -19,8 +19,12 @@ export const frontend = (db: DbServer) => {
   app.get('/details/:id', (req, res) => {
     const id = req.params.id;
     (async () => {
-      const article = await db.retrieve(id);
-      res.render('pages/detail', {article, currency});
+      try {
+        const article = await db.retrieve(id);
+        res.render('pages/detail', {article, currency});
+      } catch (err) {
+        res.status(404).end();
+      }
     })();
   });
 
