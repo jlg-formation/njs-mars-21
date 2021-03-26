@@ -2,12 +2,15 @@ import {MongoClient, ObjectId} from 'mongodb';
 import mongoose, {Schema} from 'mongoose';
 
 import {Article} from '../interfaces/Article';
-import {MongoResource} from '../interfaces/MongoResource';
+import {MongooseResource} from '../interfaces/MongooseResource';
 import {DbServer} from './DbServer';
 
-function correctId(resource: MongoResource) {
-  resource.id = resource._id;
-  delete resource._id;
+function correctId(resource: MongooseResource): MongooseResource {
+  const result = {...resource};
+  delete result.__v;
+  result.id = result._id;
+  delete result._id;
+  return result;
 }
 
 const ArticleModel = mongoose.model(
@@ -76,9 +79,8 @@ export class MongooseDbServer extends DbServer {
   async add(resource: Article): Promise<Article> {
     const res = new ArticleModel(resource);
     const result = await res.save();
-    console.log('result: ', result);
-    // correctId((result.ops[0] as unknown) as MongoResource);
-    return (result as unknown) as Article;
+    const r = correctId(result.toObject() as MongooseResource);
+    return (r as unknown) as Article;
   }
 
   async delete(id: string): Promise<void> {
