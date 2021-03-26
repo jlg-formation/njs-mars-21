@@ -3,6 +3,7 @@ import mongoose, {Schema} from 'mongoose';
 
 import {Article} from '../interfaces/Article';
 import {MongooseResource} from '../interfaces/MongooseResource';
+import {UserError} from '../UserError';
 import {DbServer} from './DbServer';
 
 function correctId(resource: MongooseResource) {
@@ -53,13 +54,16 @@ export class MongooseDbServer extends DbServer {
   }
 
   async retrieve(id: string): Promise<Article> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const resource: any = await this.client
-      .db()
-      .collection<unknown>('articles')
-      .findOne({_id: new ObjectId(id)});
-    correctId(resource);
-    return resource as Article;
+    if (!ObjectId.isValid(id)) {
+      throw new UserError('id not valid');
+    }
+    const result = await ArticleModel.findById(id).exec();
+    if (result === null) {
+      throw new UserError('not exist');
+    }
+    const r = result.toObject();
+    correctId(r as MongooseResource);
+    return (r as unknown) as Article;
   }
 
   async retrieveAll() {
