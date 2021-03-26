@@ -32,11 +32,22 @@ export const frontend = (db: DbServer) => {
 
   app.post('/action/add-article', (req, res) => {
     (async () => {
-      const article = req.body as Article;
-      console.log('article: ', article);
-      await db.add(article);
-      res.redirect('/');
+      try {
+        const article = req.body as Article;
+        console.log('article: ', article);
+        if (article.name === '') {
+          throw new Error('cannot insert an article with no name');
+        }
+        await db.add(article);
+        res.redirect('/');
+      } catch (err) {
+        res.redirect('/error');
+      }
     })();
+  });
+
+  app.get('/error', (req, res) => {
+    res.render('pages/error', {});
   });
 
   return app;
