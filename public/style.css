@@ -1,0 +1,21 @@
+body {
+  font-family: sans-serif;
+}
+
+table {
+  border: 0.1em solid #ccc;
+  border-collapse: collapse;
+}
+
+table td,
+table th {
+  padding: 0.5em 1em;
+}
+
+table thead {
+  background-color: #ccc;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #eee;
+}
