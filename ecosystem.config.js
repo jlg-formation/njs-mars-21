@@ -17,6 +17,7 @@ module.exports = {
       env_ovh: {
         NODE_ENV: 'production',
         TEST_DB_URI: 'file',
+        URI: 'file',
         DB_MONGOOSE: undefined,
         PORT: 3334,
       },
