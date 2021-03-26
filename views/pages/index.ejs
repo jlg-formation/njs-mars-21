@@ -19,8 +19,8 @@
         <% articles.forEach((article) => { %>
         <tr>
           <td><%= article.name %></td>
-          <td>2.33 €</td>
-          <td>345</td>
+          <td><%= currency(article.price) %> €</td>
+          <td><%= article.qty %></td>
         </tr>
         <% }); %>
       </tbody>
