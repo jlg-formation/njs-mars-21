@@ -1,4 +1,5 @@
 import {MongoClient, ObjectId} from 'mongodb';
+import mongoose, {Schema} from 'mongoose';
 
 import {Article} from '../interfaces/Article';
 import {MongoResource} from '../interfaces/MongoResource';
@@ -8,6 +9,23 @@ function correctId(resource: MongoResource) {
   resource.id = resource._id;
   delete resource._id;
 }
+
+const ArticleModel = mongoose.model(
+  'Article',
+  new Schema({
+    name: String,
+    price: {
+      type: Number,
+      get: (v: number) => Math.round(v * 100) / 100,
+      set: (v: number) => Math.round(v * 100) / 100,
+    },
+    qty: {
+      type: Number,
+      get: (v: number) => Math.round(v),
+      set: (v: number) => Math.round(v),
+    },
+  })
+);
 
 export class MongooseDbServer extends DbServer {
   client!: MongoClient;
@@ -20,7 +38,11 @@ export class MongooseDbServer extends DbServer {
   }
 
   async start() {
-    await this.client.connect();
+    await mongoose.connect(this.uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
     console.log('successfully connected to Mongo with Mongoose...');
   }
 
@@ -52,12 +74,11 @@ export class MongooseDbServer extends DbServer {
   }
 
   async add(resource: Article): Promise<Article> {
-    const result = await this.client
-      .db()
-      .collection<unknown>('articles')
-      .insertOne((resource as unknown) as Pick<unknown, never>);
-    correctId((result.ops[0] as unknown) as MongoResource);
-    return (result.ops[0] as unknown) as Article;
+    const res = new ArticleModel(resource);
+    const result = await res.save();
+    console.log('result: ', result);
+    // correctId((result.ops[0] as unknown) as MongoResource);
+    return (result as unknown) as Article;
   }
 
   async delete(id: string): Promise<void> {
