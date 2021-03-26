@@ -1,7 +1,9 @@
 import {WebServer} from './WebServer';
 
+const port = +(process.env.PORT || 3333);
+
 const webserver = new WebServer(
-  3000,
+  port,
   'mongodb://localhost:27017/gestion-stock'
 );
 webserver.start();
